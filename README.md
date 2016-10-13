@@ -1,2 +1,4 @@
 # hello-world
-Hello Git!
+Hello Tugou!
+
+That's is for test how to use Branch function!!
