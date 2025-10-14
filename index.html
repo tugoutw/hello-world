@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content="智慧家庭電器儀表板 - 1920×1080 - 純 HTML/CSS/JS" />
+    <title>智慧家庭儀表板</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <div id="app" class="app-root" aria-label="智慧家庭儀表板">
+      <!-- Header -->
+      <header class="card header" role="banner">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3L2 12h3v8h6v-5h2v5h6v-8h3L12 3z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h1 class="title">Smart Home</h1>
+        </div>
+        <div class="header-stats" role="status" aria-live="polite">
+          <div class="stat"><span class="label">室內</span><span id="stat-indoor-temp" class="value">--°C</span></div>
+          <div class="stat"><span class="label">濕度</span><span id="stat-humidity" class="value">--%</span></div>
+          <div class="stat"><span class="label">即時功率</span><span id="stat-power" class="value">-- kW</span></div>
+          <div class="stat"><span class="label">安全</span><span id="stat-security" class="value">--</span></div>
+        </div>
+        <div class="clock" aria-live="polite">
+          <div id="clock-time" class="time">--:--</div>
+          <div id="clock-date" class="date">----/--/--</div>
+        </div>
+      </header>
+
+      <main class="grid" role="main">
+        <!-- Thermostat -->
+        <section id="card-thermostat" class="card card-thermostat" aria-labelledby="thermostat-title">
+          <div class="card-head">
+            <h2 id="thermostat-title" class="card-title">恆溫控制</h2>
+            <div id="thermo-mode-indicator" class="pill">自動</div>
+          </div>
+          <div class="thermo">
+            <div class="thermo-current">
+              <span id="thermo-current" class="thermo-current-value">--</span><span class="unit">°C</span>
+            </div>
+            <div class="thermo-set">
+              <button id="thermo-decrease" class="btn round" aria-label="降低目標溫度">−</button>
+              <div class="setpoint">
+                <span class="label">目標</span>
+                <span id="thermo-target" class="value">--</span><span class="unit">°C</span>
+              </div>
+              <button id="thermo-increase" class="btn round" aria-label="提高目標溫度">＋</button>
+            </div>
+            <div class="thermo-modes" role="tablist" aria-label="模式">
+              <button class="chip" data-mode="heat" role="tab" aria-selected="false">加熱</button>
+              <button class="chip" data-mode="cool" role="tab" aria-selected="false">制冷</button>
+              <button class="chip is-active" data-mode="auto" role="tab" aria-selected="true">自動</button>
+              <button class="chip" data-mode="off" role="tab" aria-selected="false">關閉</button>
+            </div>
+            <div id="thermo-status" class="subtle">狀態：待機</div>
+          </div>
+        </section>
+
+        <!-- Lights -->
+        <section id="card-lights" class="card card-lights" aria-labelledby="lights-title">
+          <div class="card-head">
+            <h2 id="lights-title" class="card-title">照明</h2>
+            <div id="lights-summary" class="pill">0/0 開啟</div>
+          </div>
+          <ul id="lights-list" class="lights-list" role="list">
+            <!-- filled by JS -->
+          </ul>
+        </section>
+
+        <!-- Security -->
+        <section id="card-security" class="card card-security" aria-labelledby="security-title">
+          <div class="card-head">
+            <h2 id="security-title" class="card-title">安全</h2>
+            <button id="security-arm" class="chip danger" aria-pressed="false">未布防</button>
+          </div>
+          <div class="security-grid">
+            <div class="sensor">
+              <div class="sensor-name">大門鎖</div>
+              <button id="lock-door" class="switch" aria-pressed="false">鎖定</button>
+            </div>
+            <div class="sensor">
+              <div class="sensor-name">後門</div>
+              <div id="sensor-backdoor" class="badge">關閉</div>
+            </div>
+            <div class="sensor">
+              <div class="sensor-name">車庫</div>
+              <div id="sensor-garage" class="badge">關閉</div>
+            </div>
+            <div class="sensor">
+              <div class="sensor-name">移動偵測</div>
+              <div id="sensor-motion" class="badge">無</div>
+            </div>
+            <div class="sensor">
+              <div class="sensor-name">攝影機</div>
+              <div id="sensor-cameras" class="badge">線上</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Energy -->
+        <section id="card-energy" class="card card-energy" aria-labelledby="energy-title">
+          <div class="card-head">
+            <h2 id="energy-title" class="card-title">用電</h2>
+            <div id="energy-now" class="pill">-- kW</div>
+          </div>
+          <div class="energy-chart-wrap">
+            <canvas id="energy-canvas" aria-label="即時用電圖表" role="img"></canvas>
+          </div>
+        </section>
+
+        <!-- Media -->
+        <section id="card-media" class="card card-media" aria-labelledby="media-title">
+          <div class="card-head">
+            <h2 id="media-title" class="card-title">媒體</h2>
+            <div id="media-track-time" class="subtle">0:00 / 0:00</div>
+          </div>
+          <div class="media-body">
+            <div class="track-meta">
+              <div id="media-track-title" class="track-title">—</div>
+              <div id="media-track-artist" class="track-artist subtle">—</div>
+            </div>
+            <div class="media-controls">
+              <button id="media-prev" class="btn">⟨⟨</button>
+              <button id="media-play" class="btn primary">播放</button>
+              <button id="media-next" class="btn">⟩⟩</button>
+            </div>
+            <div class="progress" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+              <div id="media-progress" class="bar"></div>
+            </div>
+            <div class="volume">
+              <span class="subtle">音量</span>
+              <input id="media-volume" type="range" min="0" max="100" value="70" />
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer subtle" role="contentinfo">
+        解析度：1920×1080（自動縮放以適配視窗）
+      </footer>
+    </div>
+  </body>
+</html>
