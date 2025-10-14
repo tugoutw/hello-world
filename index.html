@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smart Home Dashboard</title>
+    <meta name="description" content="Smart Home Dashboard - Vanilla HTML/CSS/JS" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23fff' d='M50 10L10 40h10v40h20V60h20v20h20V40h10z'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <div id="scale-wrapper">
+      <div id="app" aria-label="智慧家庭儀表板" role="application">
+        <header class="app-header" role="banner">
+          <div class="left">
+            <h1 class="brand" aria-label="Smart Home">🏠 Smart Home</h1>
+            <div class="location" aria-label="位置">台北 · 家</div>
+          </div>
+          <div class="center" aria-live="polite">
+            <div class="time" id="clock-time">--:--</div>
+            <div class="date" id="clock-date">----/--/--</div>
+          </div>
+          <div class="right" id="weather" aria-label="天氣">☀️ 晴 · 24°C</div>
+        </header>
+
+        <main class="grid" role="main">
+          <!-- Thermostat -->
+          <section class="card span-2x thermostat" role="region" aria-label="溫控">
+            <header class="card-header">
+              <h2>溫控</h2>
+              <div class="mode-group" role="group" aria-label="模式">
+                <button id="thermo-power" class="chip" aria-pressed="true">電源</button>
+                <button id="mode-heat" class="chip" aria-pressed="true">加熱</button>
+                <button id="mode-cool" class="chip" aria-pressed="false">製冷</button>
+                <button id="mode-auto" class="chip" aria-pressed="false">自動</button>
+              </div>
+            </header>
+            <div class="thermo-body">
+              <div class="thermo-gauge" aria-hidden="true">
+                <svg viewBox="0 0 200 200" class="gauge-svg" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#6bc2ff" />
+                      <stop offset="100%" stop-color="#7be495" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="100" cy="100" r="90" class="gauge-track" />
+                  <circle cx="100" cy="100" r="90" class="gauge-fill" id="thermo-gauge" />
+                </svg>
+                <div class="thermo-temp">
+                  <div class="temp-value" id="thermo-current">--</div>
+                  <div class="temp-target">
+                    <button class="round" id="temp-down" aria-label="降低溫度">−</button>
+                    <span id="temp-target" aria-live="polite">--</span>
+                    <button class="round" id="temp-up" aria-label="提高溫度">＋</button>
+                  </div>
+                </div>
+              </div>
+              <div class="thermo-meta">
+                <div>室內 <span id="temp-indoor">--</span>°C</div>
+                <div>室外 <span id="temp-outdoor">24</span>°C</div>
+                <div>濕度 <span id="humidity">--</span>%</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Lights -->
+          <section class="card lights" role="region" aria-label="燈光">
+            <header class="card-header">
+              <h2>燈光</h2>
+              <button id="lights-master" class="chip" aria-pressed="false">總電源</button>
+            </header>
+            <div class="list">
+              <div class="row">
+                <div class="title">客廳</div>
+                <div class="controls">
+                  <button class="chip" data-room="living" data-action="toggle" aria-pressed="false">開關</button>
+                  <label class="slider-label" for="living-bright">亮度</label>
+                  <input id="living-bright" data-room="living" type="range" min="0" max="100" value="80" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="title">廚房</div>
+                <div class="controls">
+                  <button class="chip" data-room="kitchen" data-action="toggle" aria-pressed="false">開關</button>
+                  <label class="slider-label" for="kitchen-bright">亮度</label>
+                  <input id="kitchen-bright" data-room="kitchen" type="range" min="0" max="100" value="70" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="title">臥室</div>
+                <div class="controls">
+                  <button class="chip" data-room="bedroom" data-action="toggle" aria-pressed="false">開關</button>
+                  <label class="slider-label" for="bedroom-bright">亮度</label>
+                  <input id="bedroom-bright" data-room="bedroom" type="range" min="0" max="100" value="40" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="title">浴室</div>
+                <div class="controls">
+                  <button class="chip" data-room="bathroom" data-action="toggle" aria-pressed="false">開關</button>
+                  <label class="slider-label" for="bathroom-bright">亮度</label>
+                  <input id="bathroom-bright" data-room="bathroom" type="range" min="0" max="100" value="60" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Security -->
+          <section class="card security" role="region" aria-label="安防">
+            <header class="card-header">
+              <h2>安防</h2>
+              <button id="security-arm" class="chip" aria-pressed="false">佈防</button>
+            </header>
+            <div class="security-body">
+              <div class="status">
+                <div>前門鎖 <span id="lock-front" class="badge">已上鎖</span></div>
+                <div>後門鎖 <span id="lock-back" class="badge">已上鎖</span></div>
+                <div>攝影機 <span id="cams" class="badge">開啟</span></div>
+              </div>
+              <div class="actions">
+                <button class="chip" id="toggle-front">切換前門</button>
+                <button class="chip" id="toggle-back">切換後門</button>
+                <button class="chip" id="toggle-cams">切換攝影機</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Energy -->
+          <section class="card energy" role="region" aria-label="能耗">
+            <header class="card-header">
+              <h2>能耗</h2>
+              <div class="sub">即時 <span id="power-now">--</span> kW · 今日 <span id="energy-today">--</span> kWh</div>
+            </header>
+            <canvas id="energy-chart" width="700" height="180" aria-label="今日用電圖表" role="img"></canvas>
+          </section>
+
+          <!-- Air Quality -->
+          <section class="card air" role="region" aria-label="空氣品質">
+            <header class="card-header">
+              <h2>空氣</h2>
+              <div class="sub">AQI <span id="aqi">--</span> · 濕度 <span id="air-humidity">--</span>%</div>
+            </header>
+            <div class="air-body">
+              <label class="slider-label" for="fan-speed">循環扇</label>
+              <input id="fan-speed" type="range" min="0" max="100" value="30" />
+              <div class="legend">
+                <span class="dot good"></span> 良好
+                <span class="dot moderate"></span> 普通
+                <span class="dot poor"></span> 差
+              </div>
+            </div>
+          </section>
+
+          <!-- Media -->
+          <section class="card media span-2x" role="region" aria-label="多媒體">
+            <header class="card-header">
+              <h2>多媒體</h2>
+              <div class="sub" id="track-info">--</div>
+            </header>
+            <div class="media-body">
+              <div class="controls">
+                <button id="prev" class="round" aria-label="上一首">⏮</button>
+                <button id="play" class="round" aria-label="播放/暫停">▶️</button>
+                <button id="next" class="round" aria-label="下一首">⏭</button>
+              </div>
+              <div class="progress">
+                <span id="elapsed">0:00</span>
+                <input id="seek" type="range" min="0" max="100" value="0" aria-label="播放進度" />
+                <span id="duration">0:00</span>
+              </div>
+              <div class="volume">
+                <label for="volume">音量</label>
+                <input id="volume" type="range" min="0" max="100" value="60" />
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
