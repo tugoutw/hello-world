@@ -1,0 +1,151 @@
+/* Smart Home Dashboard - Vanilla CSS */
+:root {
+  --bg: #0b0f17;
+  --panel: rgba(255, 255, 255, 0.06);
+  --panel-2: rgba(255, 255, 255, 0.08);
+  --text: #e6ecf1;
+  --muted: #9aa8b2;
+  --brand: #6bc2ff;
+  --accent: #7be495;
+  --warn: #ffcf6b;
+  --danger: #ff7b7b;
+  --ok: #7bffd0;
+  --gap: 24px;
+  --radius: 16px;
+  --shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, "Noto Sans TC", system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: radial-gradient(1000px 700px at 20% 20%, #0f1624 0%, #0b0f17 50%, #0a0d14 100%);
+  display: grid;
+  place-items: center;
+}
+
+#scale-wrapper { width: 100vw; height: 100vh; display: grid; place-items: center; overflow: hidden; }
+#app {
+  width: 1920px;
+  height: 1080px;
+  padding: var(--gap);
+  transform-origin: top left;
+}
+
+.app-header {
+  height: 96px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: var(--gap);
+}
+.app-header .left { display: flex; align-items: baseline; gap: 16px; }
+.brand { margin: 0; font-size: 28px; letter-spacing: 0.5px; }
+.location { color: var(--muted); }
+.app-header .center { text-align: center; }
+.time { font-size: 40px; font-weight: 600; }
+.date { color: var(--muted); margin-top: 4px; }
+.app-header .right { text-align: right; color: var(--muted); }
+
+.grid {
+  margin-top: var(--gap);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 300px;
+  gap: var(--gap);
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px) saturate(120%);
+  padding: 18px 18px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.card-header { display: flex; justify-content: space-between; align-items: center; }
+.card-header h2 { margin: 0; font-size: 20px; }
+.card-header .sub { color: var(--muted); font-size: 14px; }
+
+.span-2x { grid-column: span 2; }
+.span-2y { grid-row: span 2; }
+
+button {
+  appearance: none; border: none; cursor: pointer; color: var(--text);
+  background: var(--panel-2); border: 1px solid rgba(255,255,255,0.1);
+  padding: 8px 12px; border-radius: 999px; transition: 150ms ease;
+}
+button:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+button:active { transform: translateY(0); }
+button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+button.chip[aria-pressed="true"] { background: linear-gradient(180deg, rgba(123,228,149,0.3), rgba(123,228,149,0.15)); border-color: rgba(123,228,149,0.6); }
+button.chip[aria-pressed="false"] { opacity: 0.9; }
+
+.round { width: 44px; height: 44px; border-radius: 50%; font-size: 20px; display: grid; place-items: center; }
+
+.badge { padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.12); }
+
+.list { display: flex; flex-direction: column; gap: 16px; margin-top: 12px; }
+.row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; align-items: center; }
+.row .title { font-weight: 600; }
+.row .controls { display: flex; align-items: center; gap: 10px; }
+.slider-label { color: var(--muted); font-size: 12px; }
+
+/* Range styling */
+input[type=range] { -webkit-appearance: none; width: 100%; height: 32px; background: transparent; }
+input[type=range]:focus { outline: none; }
+input[type=range]::-webkit-slider-runnable-track { height: 6px; background: linear-gradient(90deg, var(--brand), var(--accent)); border-radius: 999px; }
+input[type=range]::-moz-range-track { height: 6px; background: linear-gradient(90deg, var(--brand), var(--accent)); border-radius: 999px; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: white; border: 2px solid #4bb3ff; margin-top: -6px; }
+input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: white; border: 2px solid #4bb3ff; }
+
+/* Thermostat */
+.thermostat { grid-row: span 2; }
+.thermo-body { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: center; height: 100%; }
+.thermo-gauge { position: relative; display: grid; place-items: center; }
+.gauge-svg { width: 260px; height: 260px; }
+.gauge-track { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 16; }
+.gauge-fill { fill: none; stroke: url(#g); stroke-width: 16; stroke-linecap: round; stroke-dasharray: 565; stroke-dashoffset: 565; transform: rotate(-90deg); transform-origin: center; }
+.thermo-temp { position: absolute; text-align: center; }
+.temp-value { font-size: 64px; font-weight: 700; }
+.temp-target { display: flex; align-items: center; gap: 16px; justify-content: center; margin-top: 8px; }
+
+.thermo-meta { display: grid; gap: 10px; color: var(--muted); font-size: 14px; }
+
+/* Security */
+.security-body { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 12px; }
+.status { display: grid; gap: 10px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* Energy */
+.energy { grid-column: span 2; }
+canvas#energy-chart { width: 100%; height: 220px; background: rgba(255,255,255,0.04); border-radius: 12px; margin-top: 14px; border: 1px solid rgba(255,255,255,0.08); }
+
+/* Air */
+.air-body { display: grid; gap: 12px; margin-top: 12px; }
+.legend { display: flex; gap: 12px; align-items: center; color: var(--muted); }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot.good { background: #39d98a; }
+.dot.moderate { background: #ffd166; }
+.dot.poor { background: #ef476f; }
+
+/* Media */
+.media-body { margin-top: 12px; display: grid; gap: 12px; }
+.media .controls { display: flex; gap: 10px; align-items: center; }
+.media .progress { display: grid; grid-template-columns: 40px 1fr 40px; gap: 10px; align-items: center; }
+.media .volume { display: grid; grid-template-columns: 60px 1fr; gap: 10px; align-items: center; color: var(--muted); }
+
+/* Effects */
+.card { transition: transform 200ms ease, background 200ms ease; }
+.card:hover { transform: translateY(-2px); background: rgba(255,255,255,0.08); }
+
+/* SVG gradient is defined in index.html <defs> */
+
+/* Focus visibility for custom buttons */
+.chip:focus-visible, .round:focus-visible { box-shadow: 0 0 0 3px rgba(107,194,255,0.5); }
